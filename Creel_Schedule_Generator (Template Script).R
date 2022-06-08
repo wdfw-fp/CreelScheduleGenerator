@@ -30,11 +30,11 @@
 # (2) DEFINE AMONG DAY SAMPLING FRAME (i.e., potential dates to be creel sampled)                        ----
 #---------------------------------------------------------------------------------------------------------- -    
 # Specify start and end dates for creel survey schedule (format "yyyy-mm-dd")
-    ui_startDate<-as.Date(c("2022-05-28")) 
-    ui_endDate<-as.Date(c("2022-07-31")) 
+    ui_startDate<-as.Date(c("")) 
+    ui_endDate<-as.Date(c("")) 
     
 # Specify groups of days within a week that should be considered a "weekend" (where angler effort is anticipated to be highest and similar)  
-  ui_daytype_weekends <-c("Friday", "Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
+  ui_daytype_weekends <-c("Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
 
 # Create full sampling frame
   source(paste0(wd_source_files, "/02_smpl_fram_dates.R"))
@@ -46,8 +46,8 @@
 # (3) [RANDOMLY] SELECT CREEL SURVEY DATES (FROM AMONG DAY SAMPLING FRAME)                               ----
 #---------------------------------------------------------------------------------------------------------- -   
 # Specify the number of creel survey days per week 
-  ui_surveys_perweek_total   <- 5  # TOTAL number per week
-  ui_surveys_perweek_weekend <- 3  # Weekend days per week (subset of total)
+  ui_surveys_perweek_total   <- c()  # TOTAL number per week
+  ui_surveys_perweek_weekend <- c()  # Weekend days per week (subset of total)
   
 # Do you want to remove all "holidays.of.interest" from potential creel schedule (if "Yes", creel technician will NOT be schedule to work on the exact date of all holidays)
   holidays_creel # all holidays within the creel project date range #holidays.of.interest
@@ -73,19 +73,19 @@
 # User inputs (ui) that need to be specified:
   # Sample location(s) 
       lut$water_body # List of water bodies and their associated lat/long data that have been entered into the "master" LUT list
-      ui_water_bodies<-c("Skykomish River") # Enter the waterbody(s) that will be surveyed (case sensitive and must match water_body listed in lut$water_body
+      ui_water_bodies<-c("") # Enter the waterbody(s) that will be surveyed (case sensitive and must match water_body listed in lut$water_body
   # Set bounds for the time during any given day when creel surveys can occur; should be based on fishing regulations (i.e., legal fishing hours)
       # Step #1: Select general strategy for [earliest] start and [latest] end time
       ui_start_time<-c("sunrise") # enter either "sunrise", "dawn", or "manual" 
       ui_end_time<-c("sunset")    # enter either "sunset" , "dusk", or "manual" 
       # Step #2A: If necessary, specify an offset to the start and end times  (e.g., if legal fishing occurs 1 hr. prior to sunrise & sunset, enter 1 below for both); enter 0 if no offset needed
-      ui_start_adj<-c(1) # Specify an offset for the start time (in hours);  
-      ui_end_adj<-c(1)   # Specify an offset for the end time (in hours)
+      ui_start_adj<-c() # Specify an offset for the start time (in hours);  
+      ui_end_adj<-c()   # Specify an offset for the end time (in hours)
       # Step #2B: If "manual" entered for "ui_start_time" or "ui_end_time", enter the earliest start and/or latest end time for a creel survey event
       ui_start_manual<-c("") # Specify manual start time (format "HH:MM:SS", e.g., 6 AM = "06:00:00")
       ui_end_manual<-  c("") # Specify manual end time (format "HH:MM:SS")  
   # Estimated total non-river time for a given survey date (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
-      ui_drive_time<-1.5 
+      ui_drive_time<-c() 
       
   # Potential shift lengths (i.e., total work day length in hours)
       potential_shift_length<-c(8, 10) # Generally 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules
@@ -101,9 +101,9 @@
 #---------------------------------------------------------------------------------------------------------------------------- -             
 # [More] User inputs (ui) that need to be specified:
   # Shifts & Shift Length
-    ui_shifts_total<-2   # Total number of potential shifts per day
-    ui_shifts_smpl<-2    # Number of shifts to sample within a day
-    ui_shift_length<-8   # shift length (i.e., length of entire work day including drive time to and from river from office/home)   
+    ui_shifts_total<-2   # Total number of potential shifts per day (typically 1 or 2)
+    ui_shifts_smpl<-2    # Number of shifts to sample within a day (typically 1 or 2
+    ui_shift_length<-8   # shift length (in hours; i.e., length of entire work day including drive time to and from river from office/home; typically 8 or 10)   
 
 # Run source code
   seed.number<-123
@@ -118,15 +118,13 @@
 #---------------------------------------------------------------------------------------------------------- -
 # [More] User inputs (ui) that need to be specified:
   # Index effort count details
-    ui_num_index_counts<-2   # Number of index effort counts per shift
-    ui_index_count_time<-0.5 # [Estimated] time (in hours) it takes to conduct an entire index effort count circuit based on anticipated approach (e.g., number/location of sites, number of creelers conducting index count simultaneously) 
+    ui_num_index_counts<-c()   # Number of index effort counts per shift (recommend at least 1 if >1 shift; 2 if only 1 shift)
+    ui_index_count_time<-c() # [Estimated] time (in hours) it takes to conduct an entire index effort count circuit based on anticipated approach (e.g., number/location of sites, number of creelers conducting index count simultaneously) 
 
 # Run source code
   seed.number<-1234
-  source(paste0(wd_source_files, "/06_select_index_effort_times.R"))  
-      
-# NOTE TO SELF: UPDATE PLOT (EXPAND INDEX COUNT TIMES )  
-  
+  source(paste0(wd_source_files, "/06_select_index_effort_times.R")) # NOTE TO SELF: UPDATE PLOT (EXPAND INDEX COUNT TIMES )  
+
 # Preview schedule
   index_times|> print(n=10)
 
@@ -137,7 +135,7 @@
   (sub_index_sites<-lut$locations |> filter(water_body %in% ui_water_bodies & survey_type == "index"))
 
 # Number of surveyors that will be used to complete each index count (i.e., number of surveyors working together to complete an index count circuit)  
-  (num_surveyors<-length(unique(sub_index_sites$surveyor_num))) # This number is defined in the section lut (i.e., lut$sections)
+  (num_surveyors<-length(unique(sub_index_sites$surveyor_num))) 
   
 # Run Source Code
   seed.number<-123
@@ -157,7 +155,7 @@
   
 # [More] User inputs (ui) that need to be specified:
   # Specify total number of tie-in counts per frequency interval
-    ui_num_census_counts<-10
+    ui_num_census_counts<-c()
 # NOTE: right now, script only set up to select a total number of census counts & distributes them evenly throughout the season
 # ...but could update script to allow for different frequencies (e.g., weekly, monthly) plus what daytype the surveys would occur on
   # # Specify the frequency at which tie-in counts should occur  
