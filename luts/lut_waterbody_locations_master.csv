@@ -1,0 +1,60 @@
+water_body,survey_type,surveyor_num,section_num,section_name,site_num,site_name
+Skykomish River,index,1,1,High Bridge (Confluence),1,High Bridge (Confluence)
+Skykomish River,index,1,1,Confluence to Lewis St. Bridge,2,Tualco
+Skykomish River,index,1,1,Confluence to Lewis St. Bridge,3,Lewis Street Launch
+Skykomish River,index,1,2,Lewis St. Bridge to Wallace River,4,Al Borlin Park
+Skykomish River,index,1,2,Lewis St. Bridge to Wallace River,5,Ben Howard Access
+Skykomish River,index,2,2,Lewis St. Bridge to Wallace River,1,Ben Howard Road
+Skykomish River,index,2,2,Lewis St. Bridge to Wallace River,2,Cracker Bar
+Skykomish River,index,2,2,Lewis St. Bridge to Wallace River,3,Sultan Boat Launch
+Skykomish River,index,2,3,Wallace River to Bridge at Big Eddy,4,Big Eddy park 
+Skykomish River,index,2,4,Bridge at Big Eddy to the confluence of the N and South forks,5,Cable Hole
+Skykomish River,index,2,4,Bridge at Big Eddy to the confluence of the N and South forks,6,Reiter Ponds
+Skykomish River,census,0,1,Confluence to Lewis St. Bridge,1,Confluence to Lewis St. Bridge
+Skykomish River,census,0,2,Lewis St. Bridge to Wallace River,2,Lewis St. Bridge to Wallace River
+Skykomish River,census,0,3,Wallace River to Bridge at Big Eddy,3,Wallace River to Bridge at Big Eddy
+Skykomish River,census,0,4,Bridge at Big Eddy to the confluence of the N and South forks,4,Bridge at Big Eddy to the confluence of the N and South forks
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,1,"Blakes Landing (NF Skagit, private ramp)"
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,2,Conway Boat Ramp (SF Skagit)
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,3,Edgewater Park
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,4,Mouth to Hwy. 536 at Mt. Vernon (Memorial Hwy. Bridge)
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,5,"North Fork Access (NF Skagit, at Best Road bridge)"
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,6,"Skagit City Access (SF Skagit, N. end of Fir Island)"
+Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,7,Spudhouse Access
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,8,From Hwy. 536 at Mt. Vernon (Memorial Hwy. Bridge) to mouth of Gilligan Creek
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,9,Gardner Bar (aka Mayor Tjeerdsma launch)
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,10,Railroad Bar
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,11,Riverfront Park
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,12,South Skagit Highway Stretch
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,13,Steelhead Club
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,14,Stirling Road Access
+Skagit River,index,1,2,Hwy 536 Bridge to Gilligan Creek,15,Upper Young's Bar
+Skagit River,index,2,3,Gilligan Creek to Baker River,1,Birdsview WDFW boat launch
+Skagit River,index,2,3,Gilligan Creek to Baker River,2,From mouth of Gilligan Creek to the Dalles Bridge at Concrete
+Skagit River,index,2,3,Gilligan Creek to Baker River,3,Hamilton WDFW boat launch
+Skagit River,index,2,3,Gilligan Creek to Baker River,4,Lyman Slough Conservation Area?
+Skagit River,index,2,3,Gilligan Creek to Baker River,5,Old Lyman Ferry primitive boat launch
+Skagit River,index,2,3,Gilligan Creek to Baker River,6,Pressentin Creek pull off
+Skagit River,index,2,3,Gilligan Creek to Baker River,7,Pressentin Creek to Gilligan Creek
+Skagit River,index,2,3,Gilligan Creek to Baker River,8,Primitive boat ramp old Lyman ferry
+Skagit River,index,2,3,Gilligan Creek to Baker River,9,Rasar State Park
+Skagit River,index,2,3,Gilligan Creek to Baker River,10,From the Dalles Bridge at Concrete to 200' below the mouth of Baker River
+Skagit River,index,2,3,Gilligan Creek to Baker River,11,Above the east bank of the Baker River and below the west bank of the Baker River
+Sauk River,index,3,4,Baker River to Marblemount Bridge,1,Baker River Boat Ramp
+Sauk River,index,3,4,Baker River to Marblemount Bridge,2,Big Timber log sign to Ovenells Heritage Inn driveway
+Sauk River,index,3,4,Baker River to Marblemount Bridge,3,Fabers North Access area and ramp
+Sauk River,index,3,4,Baker River to Marblemount Bridge,4,Fabers South Access area and ramp
+Sauk River,index,3,4,Baker River to Marblemount Bridge,5,Howard Miller Steelhead Park ramp
+Sauk River,index,3,4,Baker River to Marblemount Bridge,6,Jackman Creek bridge
+Sauk River,index,3,4,Baker River to Marblemount Bridge,7,Martin Launch (primitive Ramp across from Howard Miller Park)
+Sauk River,index,3,4,Baker River to Marblemount Bridge,8,Upstream of the mouth of the Baker River to the Hwy. 530 Bridge at Rockport
+Sauk River,index,3,4,Baker River to Marblemount Bridge,9,101 hole (Car Body hole access point)
+Sauk River,index,3,4,Baker River to Marblemount Bridge,10,Chapel Hole
+Sauk River,index,3,4,Baker River to Marblemount Bridge,11,From Hwy. 530 Bridge at Rockport to Cascade River Rd. (Marblemount Bridge).
+Sauk River,index,3,4,Baker River to Marblemount Bridge,12,Little eddy and Big eddy accesses
+Sauk River,index,3,4,Baker River to Marblemount Bridge,13,Marblemount Bridge (Witham Boat Ramp)
+Sauk River,index,3,4,Baker River to Marblemount Bridge,14,Swift/Sutter rest stop
+Skagit River,census,0,1,Skagit River mouth to Hwy 536 Bridge,1,Skagit River mouth to Hwy 536 Bridge
+Skagit River,census,0,2,Hwy 536 Bridge to Gilligan Creek,2,Hwy 536 Bridge to Gilligan Creek
+Skagit River,census,0,3,Gilligan Creek to Baker River,3,Gilligan Creek to Baker River
+Sauk River,census,0,4,Baker River to Marblemount Bridge,4,Baker River to Marblemount Bridge
