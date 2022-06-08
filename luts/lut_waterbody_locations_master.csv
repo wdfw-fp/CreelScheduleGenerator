@@ -10,10 +10,10 @@ Skykomish River,index,2,2,Lewis St. Bridge to Wallace River,3,Sultan Boat Launch
 Skykomish River,index,2,3,Wallace River to Bridge at Big Eddy,4,Big Eddy park 
 Skykomish River,index,2,4,Bridge at Big Eddy to the confluence of the N and South forks,5,Cable Hole
 Skykomish River,index,2,4,Bridge at Big Eddy to the confluence of the N and South forks,6,Reiter Ponds
-Skykomish River,census,0,1,Confluence to Lewis St. Bridge,1,Confluence to Lewis St. Bridge
-Skykomish River,census,0,2,Lewis St. Bridge to Wallace River,2,Lewis St. Bridge to Wallace River
-Skykomish River,census,0,3,Wallace River to Bridge at Big Eddy,3,Wallace River to Bridge at Big Eddy
-Skykomish River,census,0,4,Bridge at Big Eddy to the confluence of the N and South forks,4,Bridge at Big Eddy to the confluence of the N and South forks
+Skykomish River,census,1,1,Confluence to Lewis St. Bridge,1,Confluence to Lewis St. Bridge
+Skykomish River,census,1,2,Lewis St. Bridge to Wallace River,2,Lewis St. Bridge to Wallace River
+Skykomish River,census,1,3,Wallace River to Bridge at Big Eddy,3,Wallace River to Bridge at Big Eddy
+Skykomish River,census,1,4,Bridge at Big Eddy to the confluence of the N and South forks,4,Bridge at Big Eddy to the confluence of the N and South forks
 Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,1,"Blakes Landing (NF Skagit, private ramp)"
 Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,2,Conway Boat Ramp (SF Skagit)
 Skagit River,index,1,1,Skagit River mouth to Hwy 536 Bridge,3,Edgewater Park
@@ -54,7 +54,32 @@ Sauk River,index,3,4,Baker River to Marblemount Bridge,11,From Hwy. 530 Bridge a
 Sauk River,index,3,4,Baker River to Marblemount Bridge,12,Little eddy and Big eddy accesses
 Sauk River,index,3,4,Baker River to Marblemount Bridge,13,Marblemount Bridge (Witham Boat Ramp)
 Sauk River,index,3,4,Baker River to Marblemount Bridge,14,Swift/Sutter rest stop
-Skagit River,census,0,1,Skagit River mouth to Hwy 536 Bridge,1,Skagit River mouth to Hwy 536 Bridge
-Skagit River,census,0,2,Hwy 536 Bridge to Gilligan Creek,2,Hwy 536 Bridge to Gilligan Creek
-Skagit River,census,0,3,Gilligan Creek to Baker River,3,Gilligan Creek to Baker River
-Sauk River,census,0,4,Baker River to Marblemount Bridge,4,Baker River to Marblemount Bridge
+Skagit River,census,1,1,Skagit River mouth to Hwy 536 Bridge,1,Skagit River mouth to Hwy 536 Bridge
+Skagit River,census,1,2,Hwy 536 Bridge to Gilligan Creek,2,Hwy 536 Bridge to Gilligan Creek
+Skagit River,census,1,3,Gilligan Creek to Baker River,3,Gilligan Creek to Baker River
+Sauk River,census,1,4,Baker River to Marblemount Bridge,4,Baker River to Marblemount Bridge
+Nisqually River,index,1,1,I-5 to Riverbend Campground Upper,1,I-5
+Nisqually River,index,1,1,I-5 to Riverbend Campground Upper,2,Fort Lewis
+Nisqually River,index,1,1,I-5 to Riverbend Campground Upper,3,Handicap Access
+Nisqually River,index,1,1,I-5 to Riverbend Campground Upper,4,Riverbend Campground Lower
+Nisqually River,index,1,1,I-5 to Riverbend Campground Upper,5,Riverbend Campground Upper
+Nisqually River,index,1,3,Upper hatchery to Tank Crossing,1,Tank Crossing
+Nisqually River,index,1,3,Upper hatchery to Tank Crossing,2,Parking area above Tank Crossing
+Nisqually River,census,1,1,I-5 to Riverbend Campground Upper,1,I-5 to Riverbend Campground Upper
+Nisqually River,census,1,2,Riverbend Campground Upper to Upper hathcery,2,Riverbend Campground Upper to Upper hathcery
+Nisqually River,census,1,3,Upper hatchery to Tank Crossing,3,Upper hatchery to Tank Crossing
+Puyallup River,index,1,1,11th St. bridge to confluence of White River,1,LP1 - Soccer Fields
+Puyallup River,index,1,1,11th St. bridge to confluence of White River,2,LP2 - Weight station
+Puyallup River,index,1,1,11th St. bridge to confluence of White River,3,LP3 - N. Levee Rd. below 66th Ave. Br.
+Puyallup River,index,1,1,11th St. bridge to confluence of White River,4,LP4 - N. Levee Rd. above 66th Ave. Br.
+Puyallup River,index,2,2,confluence of White River to mouth of Carbon,1,MP - Sumner Sewage Treatment Plant parking lot
+Puyallup River,index,2,2,confluence of White River to mouth of Carbon,2,UP1 - Hwy 162 Br.
+Puyallup River,index,2,2,confluence of White River to mouth of Carbon,3,UP2 - Alderton/96th St.
+Puyallup River,index,2,2,confluence of White River to mouth of Carbon,4,UP3 - 128th St./McCutcheon Rd.
+Carbon River,index,2,3,mouth of Carbon to Voight Creek,1,C1 - 145th St.
+Carbon River,index,2,3,mouth of Carbon to Voight Creek,2,C2 - Sewage Treatment Plant
+Carbon River,index,2,3,mouth of Carbon to Voight Creek,3,C3 - River Ave.
+Carbon River,index,2,3,mouth of Carbon to Voight Creek,4,C4 - Orting skate park parking lot
+Carbon River,census,1,1,11th St. bridge to confluence of White River,1,11th St. bridge to confluence of White River
+Carbon River,census,2,2,confluence of White River to mouth of Carbon,2,confluence of White River to mouth of Carbon
+Carbon River,census,3,3,mouth of Carbon to Voight Creek,3,mouth of Carbon to Voight Creek
