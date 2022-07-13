@@ -36,6 +36,11 @@
 # Specify groups of days within a week that should be considered a "weekend" (where angler effort is anticipated to be highest and similar)  
   ui_daytype_weekends <-c("Friday", "Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
 
+# If necessary, specify days of the week and/or individual dates when fishery will be closed (and thus remove from sampling frame)
+  ui_fishery_closures<-c("No") # Enter "Yes" if sampling frame needs to be adjusted for scheduled fishery closures
+  ui_closed_weekdays<-c() # Enter individual weekdays (e.g., "Sunday", "Monday")
+  ui_closed_dates<-c() # these can be in addition to any "ui_closed_weekdays"   
+  
 # Create full sampling frame
   source(paste0(wd_source_files, "/02_smpl_fram_dates.R"))
     
