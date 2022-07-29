@@ -34,9 +34,9 @@ date_df<-function(date_list){
         day = weekdays(dates),
         wday = as.numeric(format(dates, "%u")),
         month=format(dates,"%b"),
-        month.no=as.numeric(format(dates,"%m")),
+        month_no=as.numeric(format(dates,"%m")),
         weeknum=(as.numeric(format(dates, "%W"))),
-        weeknum.adj=(interval(min(dates), dates) %/% weeks(1)) + 1,
+        weeknum_adj=(interval(min(dates), dates) %/% weeks(1)) + 1,
         weekend = ifelse(day %in% ui_daytype_weekends, 1, 0)
       )
   return(x)

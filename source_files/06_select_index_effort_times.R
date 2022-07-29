@@ -33,17 +33,17 @@ index_times<-
 
 index_times_dat_plot<-
   index_times|> 
-  left_join(dat |> select(dates, month.no, weeknum.adj), by = c("date" = "dates") ) |> 
+  left_join(dat |> select(dates, month_no, weeknum_adj), by = c("date" = "dates") ) |> 
   mutate(Time_new = hour(index_start_time))
 
 # Plot effort count times (rounded by the hour)
-    windows(width=8, height=3*ceiling(length(unique(index_times_dat_plot$month.no))/2))
-    par(mfcol=c(ceiling(length(unique(index_times_dat_plot$month.no))/2),2),family='sans', xaxs="i", yaxs="i",cex.axis=1, cex=1, mgp=c(2,0.75, 0.5),mar=c(2,1.5,1,1), oma=c(2.5,2.5,2,1))
+    windows(width=8, height=3*ceiling(length(unique(index_times_dat_plot$month_no))/2))
+    par(mfcol=c(ceiling(length(unique(index_times_dat_plot$month_no))/2),2),family='sans', xaxs="i", yaxs="i",cex.axis=1, cex=1, mgp=c(2,0.75, 0.5),mar=c(2,1.5,1,1), oma=c(2.5,2.5,2,1))
     bins<-seq(4,22,1)
 
-  for(month in 1:length(unique(index_times_dat_plot$month.no))){
-      sub.Month<-index_times_dat_plot[index_times_dat_plot$month.no==unique(index_times_dat_plot$month.no)[month],]
-      sub_month_nm<-creel_dates |> select(month, month.no) |> distinct(month.no, .keep_all = TRUE) |> filter(month.no ==sub.Month$month.no[1]) |> pull(month)
+  for(month in 1:length(unique(index_times_dat_plot$month_no))){
+      sub.Month<-index_times_dat_plot[index_times_dat_plot$month_no==unique(index_times_dat_plot$month_no)[month],]
+      sub_month_nm<-creel_dates |> select(month, month_no) |> distinct(month_no, .keep_all = TRUE) |> filter(month_no ==sub.Month$month_no[1]) |> pull(month)
   #Plot distribution of effort times
       #hist(c(sub.Month$Effort.2, sub.Month$Effort.1), main=paste(sub.Month$Month[1], sub.Site$Site[1], sep="-"), xlim=c(min(floor(avg.dawn.dusk$d.Dawn)), max(ceiling(avg.dawn.dusk$d.Dusk))), breaks=max(c(effort.times$Effort.2, effort.times$Effort.1)) - min(c(effort.times$Effort.2, effort.times$Effort.1)) +1)
       effort.plot<-hist(col="gray", sub.Month %>% select(Time_new) %>% gather() %>% pull(value), main=sub_month_nm, breaks=bins, xaxt='n')

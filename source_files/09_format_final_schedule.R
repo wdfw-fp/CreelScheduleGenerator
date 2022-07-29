@@ -1,6 +1,6 @@
 dates_final<-
   dat |> 
-  select(dates, day)|> 
+  select(dates, day, fishery_status, holiday)|> 
   filter(dates>=as.Date(ui_startDate) & dates<=as.Date(ui_endDate)) |> 
   rename(date = dates) |> 
   left_join(

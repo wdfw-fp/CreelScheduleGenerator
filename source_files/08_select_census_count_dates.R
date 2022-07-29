@@ -3,7 +3,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Create sample frame of all dates when a census survey could occur based on all creel survey dates
-  smpl_fram_census<-creel_dates |> select(dates, Num, weeknum, weeknum.adj, weekend)
+  smpl_fram_census<-creel_dates |> select(dates, Num, weeknum, weeknum_adj, weekend)
   season_length_days<-max(smpl_fram_census$Num) - min(smpl_fram_census$Num)
   census_ct_int<- ceiling(season_length_days/ui_num_census_counts)
   hypoth_census_Num<-seq(from = min(smpl_fram_census$Num), by = census_ct_int, length.out = ui_num_census_counts)

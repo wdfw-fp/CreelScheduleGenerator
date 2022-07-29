@@ -2,6 +2,8 @@
 # This file creates roving creel survey schedule using a multi-stage, stratified, probabilistic sampling approach
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 
+#NOTE: there are many objects that need to be specified by the user in sections 2-6 and 8, which are denoted with a leading "ui_" (user_input) 
+
 #---------------------------------------------------------------------------------------------------------- -  
 # (1) SPECIFY WORKING DIRECTORIES, LOAD R PACKAGES, FUNCTIONS, AND X-WALK TABLES                         ----
 #---------------------------------------------------------------------------------------------------------- -
@@ -28,19 +30,19 @@
 
 #---------------------------------------------------------------------------------------------------------- -  
 # (2) DEFINE AMONG DAY SAMPLING FRAME (i.e., potential dates to be creel sampled)                        ----
-#---------------------------------------------------------------------------------------------------------- -    
+#---------------------------------------------------------------------------------------------------------- - 
 # Specify start and end dates for creel survey schedule (format "yyyy-mm-dd")
-    ui_startDate<-as.Date(c("2022-05-28")) 
-    ui_endDate<-as.Date(c("2022-07-31")) 
+  ui_startDate<-as.Date(c("2022-05-28")) 
+  ui_endDate<-as.Date(c("2022-07-31")) 
     
 # Specify groups of days within a week that should be considered a "weekend" (where angler effort is anticipated to be highest and similar)  
   ui_daytype_weekends <-c("Friday", "Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
 
-# If necessary, specify days of the week and/or individual dates when fishery will be closed (and thus remove from sampling frame)
-  ui_fishery_closures<-c("No") # Enter "Yes" if sampling frame needs to be adjusted for scheduled fishery closures
-  ui_closed_weekdays<-c() # Enter individual weekdays (e.g., "Sunday", "Monday")
-  ui_closed_dates<-c() # these can be in addition to any "ui_closed_weekdays"   
-  
+# If needed, specify days of the week and/or individual dates when the (entire) fishery will be closed (NOTE: do NOT enter any dates where only portions of the fishery will closed.  Here adjustments will need to be made to data collection protocol)
+  ui_closed_weekdays <-c("Wednesday") # If applicable, list weekdays that the fishery will be closed; Example: c("Sunday", "Monday")
+  ui_closed_start_end<-c("2022-05-29", "2022-06-30") # If certain weekdays are closed, enter the start and end dates for closures; Example: c("2022-08-07", "2022-08-31")
+  ui_closed_dates    <-c("2022-07-14") # If applicable, list individual closure dates; NOTE: these can be in addition to any "ui_closed_weekdays"; Example: c("2022-08-24", "2022-08-31")   
+
 # Create full sampling frame
   source(paste0(wd_source_files, "/02_smpl_fram_dates.R"))
     
@@ -54,46 +56,47 @@
   ui_surveys_perweek_total   <- 5  # TOTAL number per week
   ui_surveys_perweek_weekend <- 3  # Weekend days per week (subset of total)
   
-# Do you want to remove all "holidays.of.interest" from potential creel schedule (if "Yes", creel technician will NOT be schedule to work on the exact date of all holidays)
-  holidays_creel # all holidays within the creel project date range #holidays.of.interest
+# Do you want to potentially creel sample dates when the fishery is closed   
+  ui_survey_closures<-c("No") # Enter "Yes" or "No"; NOTE: we are generally trying to survey legal fishing; therefore, default should be "No"
+    
+# Do you want to remove all from potential creel schedule (if "Yes", creel technician will NOT be schedule to work on the exact date of all holidays)
   ui_remove_holidays<-c("Yes") # Enter "Yes" or "No"
   
 # Do you want to reduce the number of survey day by the number of holidays within a week?
   ui_reduce_surveys_holidays<-c("Yes") # Enter "Yes" (Default) or "No"
   ui_reduce_daytype<-c("weekend")      # If "Yes" to previous question, enter "weekday" or "weekend" to specific what daytype the reduction in creel days should come from
-  
+
 # List any other specific dates from potential creel schedule that aren't identified in the list of holidays?
   ui_dates_to_remove<-c() # format: "2014-06-30"
 
 # Select creel survey dates  
-    seed.number<-2  #Set seed number for this section 
-    source(paste0(wd_source_files, "/03_select_creel_dates.R"))
+  seed.number<-2  #Set seed number for this section 
+  source(paste0(wd_source_files, "/03_select_creel_dates.R"))
 
 #Preview creel schedule        
-    creel_dates
+  creel_dates
 
 #---------------------------------------------------------------------------------------------------------------------------- -  
 # (4) DEFINE WITHIN DAY SAMPLING FRAME & EVALUATE SUGGESTED NUMBER OF SHIFTS PER DAY FOR GIVEN SHIFT LENGTHS ----
 #---------------------------------------------------------------------------------------------------------------------------- - 
-# User inputs (ui) that need to be specified:
-  # Sample location(s) 
-      lut$water_body # List of water bodies and their associated lat/long data that have been entered into the "master" LUT list
-      ui_water_bodies<-c("Skykomish River") # Enter the water bodies that will be surveyed (case sensitive and must match water_body listed in lut$water_body
-  # Set bounds for the time during any given day when creel surveys can occur; should be based on fishing regulations (i.e., legal fishing hours)
-      # Step #1: Select general strategy for [earliest] start and [latest] end time
-      ui_start_time<-c("sunrise") # enter either "sunrise", "dawn", or "manual" 
-      ui_end_time<-c("sunset")    # enter either "sunset" , "dusk", or "manual" 
-      # Step #2A: If necessary, specify an offset (in hours) to the start and end times  (e.g., if legal fishing occurs 1 hr. prior to sunrise & sunset, enter 1 below for both); enter 0 if no offset needed
-      ui_start_adj<-c(1)   
-      ui_end_adj<-c(1)   
-      # Step #2B: If "manual" entered for "ui_start_time" or "ui_end_time", enter the earliest start and/or latest end time for a creel survey event
-      ui_start_manual<-c("") # Specify manual start time (format "HH:MM:SS", e.g., 6 AM = "06:00:00")
-      ui_end_manual<-  c("") # Specify manual end time (format "HH:MM:SS")  
-  # Estimated total non-river time for a given survey date 
-      ui_drive_time<-1.5 # units in hours (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
-      
-  # Potential shift lengths (i.e., total work day length in hours)
-      potential_shift_length<-c(8, 10) # units in hours (NOTE: shifts are generally either 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules)
+# Sample location(s) 
+  lut$water_body # List of water bodies and their associated lat/long data that have been entered into the "master" LUT list
+  ui_water_bodies<-c("Skykomish River") # Enter the water bodies that will be surveyed (case sensitive and must match water_body listed in lut$water_body
+# Set bounds for the time during any given day when creel surveys can occur; should be based on fishing regulations (i.e., legal fishing hours)
+  # Step #1: Select general strategy for [earliest] start and [latest] end time
+    ui_start_time<-c("sunrise") # enter either "sunrise", "dawn", or "manual" 
+    ui_end_time<-c("sunset")    # enter either "sunset" , "dusk", or "manual" 
+  # Step #2A: If necessary, specify an offset (in hours) to the start and end times  (e.g., if legal fishing occurs 1 hr. prior to sunrise & sunset, enter 1 below for both); enter 0 if no offset needed
+    ui_start_adj<-c(1)   
+    ui_end_adj<-c(1)   
+  # Step #2B: If "manual" entered for "ui_start_time" or "ui_end_time", enter the earliest start and/or latest end time for a creel survey event
+    ui_start_manual<-c("") # Specify manual start time (format "HH:MM:SS", e.g., 6 AM = "06:00:00")
+    ui_end_manual<-  c("") # Specify manual end time (format "HH:MM:SS")  
+# Estimated total non-river time for a given survey date 
+  ui_drive_time<-1.5 # units in hours (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
+    
+# Potential shift lengths (i.e., total work day length in hours)
+  potential_shift_length<-c(8, 10) # units in hours (NOTE: shifts are generally either 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules)
 
 # Run source code    
   source(paste0(wd_source_files, "/04_smpl_fram_time.R"))   
@@ -104,11 +107,10 @@
 #---------------------------------------------------------------------------------------------------------------------------- -  
 # (5) [RANDOMLY] SELECT CREEL SURVEY TIMES (FROM WITHIN DAY SAMPLING FRAME)   ----
 #---------------------------------------------------------------------------------------------------------------------------- -             
-# [More] User inputs (ui) that need to be specified:
-  # Shifts & Shift Length
-    ui_shifts_total<-2   # Total number of potential shifts per day
-    ui_shifts_smpl<-2    # Number of shifts to sample within a day
-    ui_shift_length<-8   # shift length (in hours; i.e., length of entire work day including drive time to and from river from office/home)   
+# Shifts & Shift Length
+  ui_shifts_total<-2   # Total number of potential shifts per day
+  ui_shifts_smpl<-2    # Number of shifts to sample within a day
+  ui_shift_length<-8   # shift length (in hours; i.e., length of entire work day including drive time to and from river from office/home)   
 
 # Run source code
   seed.number<-123
@@ -117,14 +119,13 @@
 # Preview output
   creel_date_times |> print(n=10)
   creel_date_times |> count(shift)
-      
+ 
 #---------------------------------------------------------------------------------------------------------- -  
 # (6) SELECT RANDOM INDEX EFFORT COUNT TIMES                    ----
 #---------------------------------------------------------------------------------------------------------- -
-# [More] User inputs (ui) that need to be specified:
-  # Index effort count details
-    ui_num_index_counts<-2   # Number of index effort counts per shift
-    ui_index_count_time<-0.5 # [Estimated] time (in hours) it takes to conduct an entire index effort count circuit based on anticipated approach (e.g., number/location of sites, number of creelers conducting index count simultaneously) 
+# Index effort count details
+  ui_num_index_counts<-2   # Number of index effort counts per shift
+  ui_index_count_time<-0.5 # [Estimated] time (in hours) it takes to conduct an entire index effort count circuit based on anticipated approach (e.g., number/location of sites, number of creelers conducting index count simultaneously) 
 
 # Run source code
   seed.number<-1234
@@ -158,11 +159,10 @@
   creel_dates |> group_by(weekend) |> distinct(Num) |> summarise("total days" = n())      # Total number of days surveys by daytype (1=weekend, 0 = weekday)
   creel_dates |> group_by(weekend) |> distinct(weeknum) |> summarise("total weeks" = n()) # Total number of unique weeks surveyed by daytype
   
-# [More] User inputs (ui) that need to be specified:
   # Specify total number of tie-in counts per frequency interval
     ui_num_census_counts<-10
-# NOTE: right now, script only set up to select a total number of census counts & distributes them evenly throughout the season
-# ...but could update script to allow for different frequencies (e.g., weekly, monthly) plus what daytype the surveys would occur on
+  # NOTE: right now, script only set up to select a total number of census counts & distributes them evenly throughout the season
+  # ...but could update script to allow for different frequencies (e.g., weekly, monthly) plus what daytype the surveys would occur on
   # # Specify the frequency at which tie-in counts should occur  
   #   ui_census_count_freq<-c()
   # # Select daytype for tie-in
@@ -171,7 +171,7 @@
 # Run source code
   source(paste0(wd_source_files, "/08_select_census_count_dates.R"))  
     
-# [Suggested] Census count dates
+# [Suggested] census count dates
   final_census_date_time
 
 #---------------------------------------------------------------------------------------------------------- -  
@@ -188,4 +188,5 @@
 # (10) GENERATE FILE WITH SCHEDULE WITH ASSOCIATED USER INPUTS, NOTES, AND LIST OF INDEX SITES BY SURVEYOR(S)
 #---------------------------------------------------------------------------------------------------------- -  
   source(paste0(wd_source_files, "/10_generate_schedule_output_file.R"))
+  
   
