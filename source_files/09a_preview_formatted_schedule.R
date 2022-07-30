@@ -41,5 +41,10 @@ date_times_preview<-
   mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
   replace_na(list(shift = "OFF")) %>%
   mutate_at(vars(census_count), ~replace(., !is.na(.), "Yes")) |> 
-  mutate_at(vars(-c(date)), ~replace(., is.na(.), "-"))
+  mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
+  left_join(day_length, by = "date") |> 
+  mutate(
+        sunrise = format(sunrise, format = "%H:%M")
+      , sunset = format(sunset, format = "%H:%M")
+  )
 

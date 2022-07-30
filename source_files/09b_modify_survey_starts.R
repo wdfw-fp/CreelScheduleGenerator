@@ -55,7 +55,13 @@ final_schedule<-
     )|>
   mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
   replace_na(list(shift = "OFF")) %>%
-  mutate_at(vars(-c(date)), ~replace(., is.na(.), "-"))
+  mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
+  left_join(day_length, by = "date") |> 
+  mutate(
+        sunrise = format(sunrise, format = "%H:%M")
+      , sunset = format(sunset, format = "%H:%M")
+  )
+
 
 updates_to_shift1_survey_starts<-
   date_times_preview |> 
