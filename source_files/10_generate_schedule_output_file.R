@@ -63,12 +63,12 @@
 # record some creel schedule notes/definitions
 schedule_notes<-
 as.data.frame(matrix(
-  c(  "shift", "period number within a day when a creel survey will be conducted"
-    , "shift_start_time", "Approx. time of day when a technician should begin their shift (e.g., arrive at their duty station), which is approximately the 'river_start' minus the estimated drive time to the fishery (i.e., 'ui_drive_time' divided by two)"
-    , "river_start", "Time when the technician(s) needs to arrive at the waterbody and be ready to begin the creel survey"
-    , "index_start_time_nth", "Time when the technician(s) need to start the 'nth' index effort count"
-    , "shift_end_time", "Approx. time when a technician should end their shift (i.e., leave their duty station)"
-    , "cenus_count", "Denoting whether a census (i.e., 'tie-in') count will be conducted on a given date"
+  c(  "shift", "Period number within a day when a creel survey will be conducted"
+    , "shift_start", "Approx. time of day when a technician should begin their work day shift (e.g., arrive at their duty station)"
+    , "survey_start", "Time when the technician(s) needs to arrive at the waterbody and be ready to begin the creel survey"
+    , "index_time_nth", "Time when the technician(s) need to start the 'nth' index effort count"
+    , "survey_end", "Approx. time when the technician(s) should be leaving the waterbody and driving back to their duty station"
+    , "shift_end", "Approx. time when the technician(s) should end their work day shift (i.e., leave their duty station)"
     , "census_start_time", "Time when census count will be conducted (subject to scheduling; adjust census & index times within the day as needed)"
     )
   , ncol = 2, byrow = T)) 

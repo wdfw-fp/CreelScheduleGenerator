@@ -7,6 +7,9 @@ if(ui_shifts_smpl>ui_shifts_total){
 # Time on River - final (based on "ui_shift_length")
   (survey_time_final<-ui_shift_length - ui_drive_time)
 
+## start back here -- need to update code if survey_time_final>shift_size (now, PM shifts can work well past 1-hr after sunset)
+  
+  
 # Identify earliest start time for each shift
   creel_shifts<- tibble(date = as.Date(as.POSIXct(NA, format = "%Y-%m-%d")), shift = as.numeric(), shift_size = structure(NA_real_, class = "difftime"), earliest = as.POSIXct(NA))
   for(row in 1:nrow(sampl_fram_time)){
@@ -35,10 +38,10 @@ if(ui_shifts_smpl>ui_shifts_total){
     shift_river_difftime<-creel_date_times$shift_size[row] - survey_time_final
   
     if(as.numeric(shift_river_difftime) <= 0){
-      creel_date_times[row, "survey_start"]<-creel_date_times[row, "earliest"]
+      creel_date_times[row, "survey_start"]<-creel_date_times[row, "earliest"] + as.numeric(shift_river_difftime*60*60)
       
     }else{
-      temp_start_times<-seq(creel_date_times$earliest[row], creel_date_times$earliest[row]+ceiling(shift_river_difftime), 60*60)
+      temp_start_times<-seq(creel_date_times$earliest[row], creel_date_times$earliest[row]+round(shift_river_difftime), 60*60)
       creel_date_times[row, "survey_start"]<-mysample(x = temp_start_times, y = 1, z=FALSE)
     }
     creel_date_times[row, "survey_end"]<-creel_date_times[row, "survey_start"] + (survey_time_final*60*60)
