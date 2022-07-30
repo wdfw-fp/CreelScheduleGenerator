@@ -1,8 +1,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # This file randomly selects the effort count times on sample dates
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-shift_subunit_time<-round(River_Time_Final/ui_num_index_counts/0.25, 0)*0.25
+shift_subunit_time<-round(survey_time_final/ui_num_index_counts/0.25, 0)*0.25
 creel_date_times_index<-creel_date_times
 for(index in 1:ui_num_index_counts){
     newname = paste0("index_start_", index)
@@ -11,7 +10,7 @@ for(index in 1:ui_num_index_counts){
 
 for(row in 1:nrow(creel_date_times_index)){
 
-  index_1_start_choices<-seq(creel_date_times_index$river_start[row], creel_date_times_index$river_start[row] + (shift_subunit_time - ui_index_count_time)*60*60, ui_index_count_time*60*60)
+  index_1_start_choices<-seq(creel_date_times_index$survey_start[row], creel_date_times_index$survey_start[row] + (shift_subunit_time - ui_index_count_time)*60*60, ui_index_count_time*60*60)
   creel_date_times_index[row, "index_start_1"]<-mysample(index_1_start_choices,1,F)
   
   for(counts in 1:(ui_num_index_counts-1)){

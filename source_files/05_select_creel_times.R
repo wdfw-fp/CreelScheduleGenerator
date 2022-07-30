@@ -5,23 +5,23 @@ if(ui_shifts_smpl>ui_shifts_total){
  print("ERROR: The number of sampled shifts can't be greater than the total number of shifts") 
 }else{
 # Time on River - final (based on "ui_shift_length")
-  (River_Time_Final<-ui_shift_length - ui_drive_time)
+  (survey_time_final<-ui_shift_length - ui_drive_time)
 
 # Identify earliest start time for each shift
-  creel_shifts<- tibble(date = as.Date(as.POSIXct(NA, format = "%Y-%m-%d")), shift = as.numeric(), shift_size = structure(NA_real_, class = "difftime"), earliest_river_start = as.POSIXct(NA))
+  creel_shifts<- tibble(date = as.Date(as.POSIXct(NA, format = "%Y-%m-%d")), shift = as.numeric(), shift_size = structure(NA_real_, class = "difftime"), earliest = as.POSIXct(NA))
   for(row in 1:nrow(sampl_fram_time)){
     temp_date<-sampl_fram_time |> slice(row)
-    date_shift_length<-temp_date |> mutate(temp_shft_lng=total_sample_time/ui_shifts_total) |> select(temp_shft_lng) |> pull()
+    date_shift_length<-temp_date |> mutate(temp_shft_lng=survey_window/ui_shifts_total) |> select(temp_shft_lng) |> pull()
     samp_shifts<-mysample(x = 1:ui_shifts_total, y=ui_shifts_smpl, z = FALSE)
     
     for(shift in 1:ui_shifts_smpl){
-      temp_early_start<-temp_date |> mutate(early = earliest_start + ((samp_shifts[shift] - 1) * date_shift_length ))
+      temp_early_start<-temp_date |> mutate(early = earliest + ((samp_shifts[shift] - 1) * date_shift_length ))
       
       temp_DF<-tibble(
         date =  temp_date |> select(date) |> pull(), 
         shift = as.numeric(samp_shifts[shift]), 
         shift_size = date_shift_length,
-        earliest_river_start = temp_early_start |> select(early) |> pull()
+        earliest = temp_early_start |> select(early) |> pull()
         )
       creel_shifts<-rbind(creel_shifts, temp_DF)
     }
@@ -29,28 +29,28 @@ if(ui_shifts_smpl>ui_shifts_total){
   creel_shifts<-creel_shifts |> arrange(date, shift)
   #creel_shifts |> count(shift)
 
-# [Randomly] select river start time
-  creel_date_times<-creel_shifts |> add_column(river_start = as.POSIXct(NA), river_end = as.POSIXct(NA))
+# [Randomly] select survey start time
+  creel_date_times<-creel_shifts |> add_column(survey_start = as.POSIXct(NA), survey_end = as.POSIXct(NA))
   for(row in 1:nrow(creel_date_times)){
-    shift_river_difftime<-creel_date_times$shift_size[row] - River_Time_Final
+    shift_river_difftime<-creel_date_times$shift_size[row] - survey_time_final
   
     if(as.numeric(shift_river_difftime) <= 0){
-      creel_date_times[row, "river_start"]<-creel_date_times[row, "earliest_river_start"]
+      creel_date_times[row, "survey_start"]<-creel_date_times[row, "earliest"]
       
     }else{
-      temp_start_times<-seq(creel_date_times$earliest_river_start[row], creel_date_times$earliest_river_start[row]+ceiling(shift_river_difftime), 60*60)
-      creel_date_times[row, "river_start"]<-mysample(x = temp_start_times, y = 1, z=FALSE)
+      temp_start_times<-seq(creel_date_times$earliest[row], creel_date_times$earliest[row]+ceiling(shift_river_difftime), 60*60)
+      creel_date_times[row, "survey_start"]<-mysample(x = temp_start_times, y = 1, z=FALSE)
     }
-    creel_date_times[row, "river_end"]<-creel_date_times[row, "river_start"] + (River_Time_Final*60*60)
+    creel_date_times[row, "survey_end"]<-creel_date_times[row, "survey_start"] + (survey_time_final*60*60)
     
   }
   creel_date_times<-
     creel_date_times |> 
     mutate(
-        earliest_river_start = lubridate::round_date(earliest_river_start, "15 minutes") 
-      , river_start = lubridate::round_date(river_start, "15 minutes") 
-      , river_end = lubridate::round_date(river_end, "15 minutes")
-      #, river_diff = river_end - river_start
+        earliest = lubridate::round_date(earliest, "15 minutes") 
+      , survey_start = lubridate::round_date(survey_start, "15 minutes") 
+      , survey_end = lubridate::round_date(survey_end, "15 minutes")
+      #, river_diff = survey_end - survey_start
     ) 
 }
 
@@ -71,7 +71,7 @@ if(ui_shifts_smpl>ui_shifts_total){
 #        for(j in 1:length(unique(sub.month$dates))){
 #         
 #         sub.day<-sub.month[sub.month$dates == unique(sub.month$dates)[j],]
-#         time.expan<-seq(sub.day$River_Start, sub.day$River_End, decimaltime.expansion)
+#         time.expan<-seq(sub.day$survey_start, sub.day$survey_end, decimaltime.expansion)
 #         sub.month.tim.expan<-c(sub.month.tim.expan, time.expan)
 #         
 #       }
