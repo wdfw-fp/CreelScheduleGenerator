@@ -11,7 +11,7 @@
   as.Date(dat |> filter(day %in% ui_closed_weekdays) |> summarize(min(dates)) |> pull())
   
 # Return ERROR messages for incorrect specifications of closure dates
-  if(length(ui_closed_weekdays)>0 & !ui_closed_weekdays %in% unique(weekdays(dates))){print("***ERROR: Weekday closure [name] incorrectly entered***")}
+  if(length(ui_closed_weekdays)>0 & any(!ui_closed_weekdays %in% unique(weekdays(dates))) == TRUE){print("***ERROR: Weekday closure [name] incorrectly entered***")}
   if(length(ui_closed_weekdays)>0 & length(ui_closed_start_end)!=2){print("***ERROR: Need to enter start and end dates for when weekday closures will occur***")}
   if(length(ui_closed_weekdays)==0 & length(ui_closed_start_end)>0){print("***ERROR: Need to supply at least one weekday closure [name] if closure dates are supplied")}
 
