@@ -22,8 +22,11 @@ dat_updated<-
 #Loop through all potential dates, sample, and fill dates into "sampledat" matrix
   for(row in 1:(numweeks)){
     # Weekdays
-        dat.temp.weekday<-dat_updated[dat_updated$weeknum_adj==row & dat_updated$weekend==0,]
-          if(ui_reduce_surveys_holidays == "Yes" & ui_reduce_daytype == "weekday" & unique(dat.temp.weekday$weeknum) %in% holidays_creel$weeknum){
+      dat.temp.weekday<-dat_updated[dat_updated$weeknum_adj==row & dat_updated$weekend==0,]
+      if(nrow(dat.temp.weekday)==0){
+        samplweekdays<-rep(NA,weekdaycount_temp)
+      }else{
+        if(ui_reduce_surveys_holidays == "Yes" & ui_reduce_daytype == "weekday" & unique(dat.temp.weekday$weeknum) %in% holidays_creel$weeknum){
             weekdaycount_temp<- weekdaycount - (holidays_creel |> filter(weeknum %in% unique(dat.temp.weekday$weeknum)) |> count(weeknum) |> pull())
           }else{
             weekdaycount_temp<- weekdaycount
@@ -38,16 +41,20 @@ dat_updated<-
             samplweekdays<-mysample(dat.temp.weekday$Num, weekdaycount_temp, F)      
           }
         }
-      if(length(samplweekdays)<weekdaycount){
-        samplweekdays<-c(samplweekdays, rep(NA, (weekdaycount - length(samplweekdays))))
-      }  
+        if(length(samplweekdays)<weekdaycount){
+          samplweekdays<-c(samplweekdays, rep(NA, (weekdaycount - length(samplweekdays))))
+        }
+      }    
     # Weekends
-        dat.temp.weekend<-dat_updated[dat_updated$weeknum_adj==row & dat_updated$weekend==1,]
-          if(ui_reduce_surveys_holidays == "Yes" & ui_reduce_daytype == "weekend" & unique(dat.temp.weekend$weeknum) %in% holidays_creel$weeknum){
-              weekendcount_temp<- weekendcount - (holidays_creel |> filter(weeknum %in% unique(dat.temp.weekend$weeknum)) |> count(weeknum) |> pull())
-            }else{
-              weekendcount_temp<- weekendcount
-            }
+      dat.temp.weekend<-dat_updated[dat_updated$weeknum_adj==row & dat_updated$weekend==1,]
+      if(nrow(dat.temp.weekend)==0){
+        samplweekends<-rep(NA,weekendcount_temp)
+      }else{
+        if(ui_reduce_surveys_holidays == "Yes" & ui_reduce_daytype == "weekend" & unique(dat.temp.weekend$weeknum) %in% holidays_creel$weeknum){
+            weekendcount_temp<- weekendcount - (holidays_creel |> filter(weeknum %in% unique(dat.temp.weekend$weeknum)) |> count(weeknum) |> pull())
+          }else{
+            weekendcount_temp<- weekendcount
+          }
         if(nrow(dat.temp.weekend)<1){
           samplweekends<-rep(NA,weekendcount_temp)
         }else{
@@ -58,9 +65,10 @@ dat_updated<-
             samplweekends<-mysample(dat.temp.weekend$Num, weekendcount_temp, F)      
           }
         }
-      if(length(samplweekends)<weekendcount){
-        samplweekends<-c(samplweekends, rep(NA, (weekendcount - length(samplweekends))))
-      } 
+        if(length(samplweekends)<weekendcount){
+          samplweekends<-c(samplweekends, rep(NA, (weekendcount - length(samplweekends))))
+        }
+      }    
       sampl_dates[row,]<-c(samplweekdays, samplweekends) 
   }
   

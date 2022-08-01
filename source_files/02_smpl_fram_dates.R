@@ -2,14 +2,13 @@
 # This creates the sampling frame for the creel surveys
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Create dataframe of all possible creel survey dates
-  adjusted_startDate<-as.Date(cut(as.Date(ui_startDate), breaks = 'week', start.on.monday = T))
-  adjusted_endDate  <-as.Date(cut(as.Date(ui_endDate)+7, breaks = 'week', start.on.monday = T))-1
-
-  dates<-seq(adjusted_startDate, adjusted_endDate, 1)
+  # adjusted_startDate<-as.Date(cut(as.Date(ui_startDate), breaks = 'week', start.on.monday = T))
+  # adjusted_endDate  <-as.Date(cut(as.Date(ui_endDate)+7, breaks = 'week', start.on.monday = T))-1
+  # dates<-seq(adjusted_startDate, adjusted_endDate, 1)
+  
+  dates<-seq(ui_startDate, ui_endDate, 1)
   dat<-date_df(dates) # Use "date_df" function to create "dat" sample frame
-  
-  as.Date(dat |> filter(day %in% ui_closed_weekdays) |> summarize(min(dates)) |> pull())
-  
+
 # Return ERROR messages for incorrect specifications of closure dates
   if(length(ui_closed_weekdays)>0 & any(!ui_closed_weekdays %in% unique(weekdays(dates))) == TRUE){print("***ERROR: Weekday closure [name] incorrectly entered***")}
   if(length(ui_closed_weekdays)>0 & length(ui_closed_start_end)!=2){print("***ERROR: Need to enter start and end dates for when weekday closures will occur***")}
