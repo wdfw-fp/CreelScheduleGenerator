@@ -62,6 +62,10 @@ final_schedule<-
       , sunset = format(sunset, format = "%H:%M")
   )
 
+if(ui_num_census_counts==0){
+  final_schedule<-final_schedule |> select( -census_start_time)
+}
+
 
 updates_to_shift1_survey_starts<-
   date_times_preview |> 

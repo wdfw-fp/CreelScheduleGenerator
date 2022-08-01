@@ -48,3 +48,6 @@ date_times_preview<-
       , sunset = format(sunset, format = "%H:%M")
   )
 
+if(ui_num_census_counts==0){
+  date_times_preview<-date_times_preview |> select( -census_start_time)
+}
