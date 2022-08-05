@@ -38,7 +38,8 @@ date_times_preview<-
       , census_start_time = format(census_start_time, format = "%H:%M")
     )|> 
   rename(census_count = index_count) |>
-  mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
+  mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M")),
+         shift = as.character(shift)) |> # ** EB coerced to character due to error from replace_na(): Can't convert `replace$shift` <character> to match type of `data$shift` <double>.
   replace_na(list(shift = "OFF")) %>%
   mutate_at(vars(census_count), ~replace(., !is.na(.), "Yes")) |> 
   mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
