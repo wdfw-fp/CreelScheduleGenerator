@@ -53,7 +53,8 @@ final_schedule<-
       , shift_end = format(shift_end, format = "%H:%M")
       , census_start_time = format(census_start_time, format = "%H:%M")
     )|>
-  mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
+  mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M")),
+         shift = as.character(shift)) |> # coerce to character before using replace_na()
   replace_na(list(shift = "OFF")) %>%
   mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
   left_join(day_length, by = "date") |> 
