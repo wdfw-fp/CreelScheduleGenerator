@@ -24,7 +24,8 @@ if(drop_start_location == "Yes"){index_final<-index_final |> select(!contains("s
 
 date_times_preview<-
   dates_final |>
-  mutate(shift_start = survey_start - (ui_drive_time/2)*60*60, shift_end = survey_end + (ui_drive_time/2)*60*60) |> 
+  mutate(shift_start = lubridate::floor_date(survey_start - (ui_drive_time/2)*60*60, "15 minutes"), shift_end = lubridate::ceiling_date(survey_end + (ui_drive_time/2)*60*60, "15 minutes")) |> 
+  
   relocate(shift_start, .before = survey_start) |> 
   left_join(index_final, by = c("date", "shift")) |> 
   relocate(survey_end, .after = last_col()) |> 

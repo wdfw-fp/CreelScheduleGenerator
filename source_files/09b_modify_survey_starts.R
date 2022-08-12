@@ -5,78 +5,88 @@
     dates_final |> 
     left_join(index_final, by = c("date", "shift")) |> 
     relocate(survey_end, .after = last_col()) |> 
-    mutate(temp_start = paste(dates_final$date, ui_modify_ss_index1)) %>%   
-    mutate(across('temp_start', ~ as.POSIXct(.x, format = "%Y-%m-%d %H:%M:%S"))) 
+    left_join(sampl_fram_time |> select(date, latest), by = "date" ) |> 
+    mutate(temp_start = paste(dates_final$date, ui_modify_ss_latest)) %>%   
+    mutate(across('temp_start', ~ as.POSIXct(.x, format = "%Y-%m-%d %H:%M:%S"))) |>
+    mutate(temp_end =  temp_start + (survey_time_final*60*60)) |> 
+    mutate(darkness = ifelse(temp_end>latest, "Yes", "No" )) |> 
+    mutate(index_b4_temp = ifelse(index_time_1<=temp_start, "Yes", "No")) |> 
+    mutate(temp_b4_survey = ifelse(temp_start<=survey_start, "Yes", "No")) |> 
+    mutate(latest_start = latest - (survey_time_final*60*60))
   
   final_unchanged<-
     final_draft |> 
-    filter(!shift %in% ui_modify_ss_shifts) |> 
-    select(-temp_start)
+    filter(!shift %in% ui_modify_ss_shifts | temp_b4_survey == "Yes") 
   
   final_changed<-
     final_draft |> 
-    filter(shift %in% ui_modify_ss_shifts) |> 
-    mutate(index_start = ifelse(index_time_1<=temp_start, "Yes", "No"))  
+    filter(shift %in% ui_modify_ss_shifts & temp_b4_survey == "No" )  
 
+  final_changed_start_to_darkness<-    
+    final_changed |> 
+    filter(darkness == "Yes") |> 
+    select(-survey_start) |> 
+    mutate(survey_start = latest_start) |>  
+    relocate(survey_start, .after = shift) 
+  
   final_changed_start_to_index<-
     final_changed |> 
-    filter(index_start == "Yes") |> 
+    filter(darkness == "No" & index_b4_temp == "Yes") |> 
     select(-survey_start) |> 
     mutate(survey_start = index_time_1) |>  
-    relocate(survey_start, .after = shift)  |> 
-    select(-temp_start, -index_start)
-  
+    relocate(survey_start, .after = shift)  
+
   final_changed_start_to_latest<- 
     final_changed |> 
-    filter(index_start == "No") |> 
+    filter(darkness == "No" & index_b4_temp == "No") |> 
     select(-survey_start) |> 
     mutate(survey_start = temp_start) |>  
-    relocate(survey_start, .after = shift)  |> 
-    select(-temp_start, -index_start)
+    relocate(survey_start, .after = shift) 
 
   final_all<-
-    rbind(final_unchanged, final_changed_start_to_index, final_changed_start_to_latest) |> 
-    mutate(survey_end = survey_start + survey_time_final*60*60)  |> 
-    arrange(date, shift)
+      rbind(final_unchanged, final_changed_start_to_index, final_changed_start_to_latest, final_changed_start_to_darkness) |> 
+      mutate(survey_end = survey_start + survey_time_final*60*60)  |> 
+      select(-temp_start, -temp_end, -temp_b4_survey, -index_b4_temp, -darkness, -latest_start, -latest)|>
+      arrange(date, shift)
+    
+  final_schedule<-
+    final_all |> 
+    mutate(shift_start = lubridate::floor_date(survey_start - (ui_drive_time/2)*60*60, "15 minutes"), shift_end = lubridate::ceiling_date(survey_end + (ui_drive_time/2)*60*60, "15 minutes")) |> 
+    relocate(shift_start, .before = survey_start) |> 
+    relocate(shift_end, .after = survey_end) |> 
+    left_join(final_census_date_time |> select(-day), by = c("date", "shift")) |>
+    select(-index_count) |>
+    mutate(
+          shift_start = format(shift_start, format = "%H:%M")
+        , survey_start = format(survey_start, format = "%H:%M")
+        , survey_end = format(survey_end, format = "%H:%M")
+        , shift_end = format(shift_end, format = "%H:%M")
+        , census_start_time = format(census_start_time, format = "%H:%M")
+      )|>
+    mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
+    replace_na(list(shift = "OFF")) %>%
+    mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
+    left_join(day_length, by = "date") |> 
+    mutate(
+          sunrise = format(sunrise, format = "%H:%M")
+        , sunset = format(sunset, format = "%H:%M")
+    )
   
-final_schedule<-
-  final_all |> 
-  mutate(shift_start = survey_start - (ui_drive_time/2)*60*60, shift_end = survey_end + (ui_drive_time/2)*60*60) |> 
-  relocate(shift_start, .before = survey_start) |> 
-  relocate(shift_end, .after = survey_end) |> 
-  left_join(final_census_date_time |> select(-day), by = c("date", "shift")) |>
-  select(-index_count) |>
-  mutate(
-        shift_start = format(shift_start, format = "%H:%M")
-      , survey_start = format(survey_start, format = "%H:%M")
-      , survey_end = format(survey_end, format = "%H:%M")
-      , shift_end = format(shift_end, format = "%H:%M")
-      , census_start_time = format(census_start_time, format = "%H:%M")
-    )|>
-  mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
-  replace_na(list(shift = "OFF")) %>%
-  mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
-  left_join(day_length, by = "date") |> 
-  mutate(
-        sunrise = format(sunrise, format = "%H:%M")
-      , sunset = format(sunset, format = "%H:%M")
-  )
-
-if(ui_num_census_counts==0){
-  final_schedule<-final_schedule |> select( -census_start_time)
-}
-
-
-updates_to_shift1_survey_starts<-
-  date_times_preview |> 
-  mutate(start_diff_index = ifelse(survey_start != index_time_1, "yes","no")) |> 
-  filter(shift ==1) |> 
-  select(date, shift, survey_start, start_diff_index) |>
-  rename(old_start = survey_start) |> 
-  left_join(final_schedule |> select(date, shift, survey_start, index_time_1), by=c("date", "shift")) |> 
-  rename(new_start = survey_start) |> 
-  select(date, start_diff_index, old_start, new_start, index_time_1) |> 
-  mutate(change_hrs = as.numeric(strptime(new_start, "%H:%M") - strptime(old_start, "%H:%M"))/60/60)
+  if(ui_num_census_counts==0){
+    final_schedule<-final_schedule |> select( -census_start_time)
+  }
+  
+  
+  updates_to_shift1_survey_starts<-
+    date_times_preview |> 
+    mutate(start_diff_index = ifelse(survey_start != index_time_1, "yes","no")) |> 
+    filter(shift ==1) |> 
+    select(date, shift, survey_start, start_diff_index) |>
+    rename(old_start = survey_start) |> 
+    left_join(final_schedule |> select(date, shift, survey_start, index_time_1), by=c("date", "shift")) |> 
+    rename(new_start = survey_start) |> 
+    select(date, start_diff_index, old_start, new_start, index_time_1) |> 
+    mutate(change_hrs = as.numeric(strptime(new_start, "%H:%M") - strptime(old_start, "%H:%M"))/60/60)
 
 
   
