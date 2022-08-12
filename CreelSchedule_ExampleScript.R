@@ -158,7 +158,8 @@
 # Use the following summaries to specify the TOTAL number of tie-in counts to conduct across the entire length of the survey period
   creel_dates |> group_by(weekend) |> distinct(Num) |> summarise("total days" = n())      # Total number of days surveys by daytype (1=weekend, 0 = weekday)
   creel_dates |> group_by(weekend) |> distinct(weeknum) |> summarise("total weeks" = n()) # Total number of unique weeks surveyed by daytype
-  
+  creel_dates |> distinct(weeknum_adj)
+    
 # Specify total number of tie-in counts per frequency interval
   ui_num_census_counts<-10
   # NOTE: right now, script only set up to select a total number of census counts & distributes them evenly throughout the season
@@ -182,19 +183,19 @@
   source(paste0(wd_source_files, "/09a_preview_formatted_schedule.R")) 
     
 # Preview schedule
-  date_times_preview |> print(n=10)
+  date_times_preview |> print(n=100)
   
 # Decide if you want to modify the "survey_start" under specific conditions
   ui_modify_ss<-c("Yes")          # Enter "Yes" if you want to update "survey_start" (which will also effect "survey_end")
   ui_modify_ss_shifts<-c(1)       # Enter the "shift" number where the "survey_start" can be modified
-  ui_modify_ss_index1<-c("08:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
+  ui_modify_ss_latest<-c("10:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
   
 # If desired, updated "survey_start" times 
   if(ui_modify_ss == "Yes"){source(paste0(wd_source_files, "/09b_modify_survey_starts.R"))}else{final_schedule<-date_times_preview} 
   if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> print(n = Inf)}
   
 # Final schedule
-  final_schedule |> print(n=10) 
+  final_schedule |> print(n=10)
 
 #---------------------------------------------------------------------------------------------------------- -  
 # (10) GENERATE FILE WITH SCHEDULE WITH ASSOCIATED USER INPUTS, NOTES, AND LIST OF INDEX SITES BY SURVEYOR(S)
