@@ -63,7 +63,8 @@
         , shift_end = format(shift_end, format = "%H:%M")
         , census_start_time = format(census_start_time, format = "%H:%M")
       )|>
-    mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M"))) |>
+    mutate(across(starts_with("index"), ~format(as.POSIXct(.), "%H:%M")),
+           shift = as.character(shift)) |> # ** EB coerced to character due to error from replace_na(): Can't convert `replace$shift` <character> to match type of `data$shift` <double>.) |>
     replace_na(list(shift = "OFF")) %>%
     mutate_at(vars(-c(date)), ~replace(., is.na(.), "-")) |> 
     left_join(day_length, by = "date") |> 
