@@ -8,7 +8,7 @@ dates_final<-
   rename(date = dates) |> 
   left_join(
     creel_date_times |> 
-      select(-shift_size, -earliest)  
+      select(-shift_size)  
     , by = "date") 
 
 
