@@ -186,15 +186,18 @@
   
 # Decide if you want to modify the "survey_start" under specific conditions
   ui_modify_ss<-c("Yes")          # Enter "Yes" if you want to update "survey_start" (which will also effect "survey_end")
-  ui_modify_ss_shifts<-c(1)       # Enter the "shift" number where the "survey_start" can be modified
-  ui_modify_ss_index1<-c("08:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
+  ui_modify_ss_latest<-c("08:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
   
 # If desired, updated "survey_start" times 
   if(ui_modify_ss == "Yes"){source(paste0(wd_source_files, "/09b_modify_survey_starts.R"))}else{final_schedule<-date_times_preview} 
-  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> print(n = Inf)}
+  
+# Summary of changes to schedule  
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> group_by(change_hrs) |> summarise(n = n())} # count of surveys by the absolute change in the survey_start (time)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (index_b4_start == "Yes") } # Flag any surveys where index1 occurs before survey_start (this shouldn't happen but checking just in case)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (end_minus_sunset > ui_end_adj) } # Flag any surveys where survey_end is after end of legal fishing hours (any surveys listed here should be due to a tiny amount of rounding error and barely larger than ui_end_adj )
   
 # Final schedule
-  final_schedule |> print(n=10) 
+  final_schedule |> print(n=10)  
 
 #---------------------------------------------------------------------------------------------------------- -  
 # (10) GENERATE FILE WITH SCHEDULE WITH ASSOCIATED USER INPUTS, NOTES, AND LIST OF INDEX SITES BY SURVEYOR(S)
