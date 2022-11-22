@@ -93,5 +93,6 @@
     mutate(
       change_hrs = as.numeric(strptime(survey_start_final, "%H:%M") - strptime(survey_start_initial, "%H:%M"))/60/60,
       index_b4_start = if_else(strptime(survey_start_final, "%H:%M")>strptime(index_time_1, "%H:%M"), "Yes", "-"),
-      end_minus_sunset = round(as.numeric(strptime(survey_end_final, "%H:%M") - strptime(sunset, "%H:%M"))/60/60, 2)
+      end_minus_sunset = (as.numeric(strptime(survey_end_final, "%H:%M")) - as.numeric(strptime(sunset, "%H:%M")))/(60*60)
       )
+  
