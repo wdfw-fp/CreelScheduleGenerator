@@ -29,37 +29,64 @@ if(ui_shifts_smpl>ui_shifts_total){
   creel_shifts<-creel_shifts |> arrange(date, shift)
 
 # [Randomly] select survey start time
-  creel_date_times<-creel_shifts |> add_column(survey_start = as.POSIXct(NA), survey_end = as.POSIXct(NA))
-  for(row in 1:nrow(creel_date_times)){
+  creel_survey_start<-creel_shifts |> add_column(survey_start = as.POSIXct(NA))
+  #creel_survey_start<-creel_shifts |> add_column(survey_start = as.POSIXct(NA), survey_end = as.POSIXct(NA))
+  for(row in 1:nrow(creel_survey_start)){
     # Calculate different between total shift size and "on-water" survey time
-      shift_survey_difftime<-creel_date_times$shift_size[row] - survey_time_final
+      shift_survey_difftime<-creel_survey_start$shift_size[row] - survey_time_final
       
     # if "shift_survey_difftime" is less than 0 (meaning survey time is greater than the shift length)...  
     if(as.numeric(shift_survey_difftime) < 0){
     # ...AND 
-      if(creel_date_times$shift[row] == max(creel_date_times$shift) & ui_shifts_total!=1 ){ # if more than 1 shift & last shift of day...
-        creel_date_times[row, "survey_start"]<-creel_date_times[row, "earliest"] + as.numeric(shift_survey_difftime*60*60) #...Need to make start time early otherwise will go past dark
+      if(creel_survey_start$shift[row] == max(creel_survey_start$shift) & ui_shifts_total!=1 ){ # if more than 1 shift & last shift of day...
+        creel_survey_start[row, "survey_start"]<-creel_survey_start[row, "earliest"] + as.numeric(shift_survey_difftime*60*60) #...Need to make start time early otherwise will go past dark
     # ...OR  
       }else{
-        creel_date_times[row, "survey_start"]<-creel_date_times[row, "earliest"] 
+        creel_survey_start[row, "survey_start"]<-creel_survey_start[row, "earliest"] 
       }
       
     # if "shift_survey_difftime" is greater than zero...
     }else{
-      temp_start_times<-seq(creel_date_times$earliest[row], creel_date_times$earliest[row]+round(shift_survey_difftime), 60*60)
-      creel_date_times[row, "survey_start"]<-mysample(x = temp_start_times, y = 1, z=FALSE)
+      temp_start_times<-seq(creel_survey_start$earliest[row], creel_survey_start$earliest[row]+round(shift_survey_difftime), 60*60)
+      creel_survey_start[row, "survey_start"]<-mysample(x = temp_start_times, y = 1, z=FALSE)
     }
-    creel_date_times[row, "survey_end"]<-creel_date_times[row, "survey_start"] + (survey_time_final*60*60)
-    
+    #creel_survey_start[row, "survey_end"]<-creel_survey_start[row, "survey_start"] + (survey_time_final*60*60)
   }
+  
+# ***NOTE: Due to rounding of time, it's possible that the survey_end (times) can go (a little bit past) the latest possible survey end time (sunset + ui_end_adj) 
+# Therefore, need to evaluate survey_end and adjust if necessary to ensure survey_end does not go past sunset + ui_end_adj
+  creel_times_eval<-
+    creel_survey_start |> 
+    mutate(survey_end = survey_start + survey_time_final*60*60) |> 
+    left_join(day_length |> select(date, sunset), by = "date") |> 
+    mutate(end_minus_sunset = round(difftime(survey_end, sunset, units = "hours"), 2))
+  
+  creel_times_no_change<-
+    creel_times_eval |> 
+    filter(end_minus_sunset - ui_end_adj <= 0)
+  
+  
+  creel_times_update<-
+    creel_times_eval |> 
+    filter(end_minus_sunset - ui_end_adj > 0) |> 
+    mutate(
+      survey_end_new = lubridate::floor_date(sunset, "15 minutes") +  (ui_end_adj*60*60), 
+      survey_start_new = survey_end_new - (survey_time_final*60*60)
+    ) |> 
+    select(-survey_start, -survey_end) |> 
+    rename(survey_start = survey_start_new, survey_end = survey_end_new)
+  
+  
+  
+# Format initial selection of creel & evaluate survey_end (time) relative to latest possible survey end time (sunset + ui_end_adj)  
   creel_date_times<-
-    creel_date_times |> 
+    rbind(creel_times_no_change, creel_times_update) |> 
     mutate(
         earliest = lubridate::round_date(earliest, "15 minutes") 
       , survey_start = lubridate::round_date(survey_start, "15 minutes") 
       , survey_end = lubridate::round_date(survey_end, "15 minutes")
-      #, river_diff = survey_end - survey_start
-    ) 
+    ) |> 
+    select(-earliest, -end_minus_sunset, -sunset)
 }
 
 # *** come back to this code to update and reincorporate ***
