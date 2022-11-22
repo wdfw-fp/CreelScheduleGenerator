@@ -87,16 +87,16 @@
     ui_start_time<-c("sunrise") # enter either "sunrise" or "manual" 
     ui_end_time<-c("sunset")    # enter either "sunset"  or "manual" 
   # Step #2A: If necessary, specify an offset (in hours) to the start and end times  (e.g., if legal fishing occurs 1 hr. prior to sunrise & sunset, enter 1 below for both); enter 0 if no offset needed
-    ui_start_adj<-c(1)   
-    ui_end_adj<-c(1)   
+    ui_start_adj<-c(1) # Specify an offset for the start time (in hours);    
+    ui_end_adj<-c(1)   # Specify an offset for the end time (in hours);  
   # Step #2B: If "manual" entered for "ui_start_time" or "ui_end_time", enter the earliest start and/or latest end time for a creel survey event
     ui_start_manual<-c() # Specify manual start time (format "HH:MM:SS", e.g., 6 AM = "06:00:00")
     ui_end_manual<-  c() # Specify manual end time (format "HH:MM:SS")  
-# Estimated total non-river time for a given survey date 
-  ui_drive_time<-1.5 # units in hours (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
+# Estimated total non-river time for a given survey date (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
+    ui_drive_time<-1.5
     
 # Potential shift lengths (i.e., total work day length in hours)
-  potential_shift_length<-c(8, 10) # units in hours (NOTE: shifts are generally either 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules)
+    potential_shift_length<-c(8, 10) # Generally 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules
 
 # Run source code    
   source(paste0(wd_source_files, "/04_smpl_fram_time.R"))   
@@ -185,14 +185,17 @@
 # Preview schedule
   date_times_preview |> print(n=100)
   
-# Decide if you want to modify the "survey_start" under specific conditions
+# Decide if you want to modify the "survey_start" of shift 1 and specific the latest possible survey_start (time)
   ui_modify_ss<-c("Yes")          # Enter "Yes" if you want to update "survey_start" (which will also effect "survey_end")
-  ui_modify_ss_shifts<-c(1)       # Enter the "shift" number where the "survey_start" can be modified
   ui_modify_ss_latest<-c("10:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
   
 # If desired, updated "survey_start" times 
   if(ui_modify_ss == "Yes"){source(paste0(wd_source_files, "/09b_modify_survey_starts.R"))}else{final_schedule<-date_times_preview} 
-  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> print(n = Inf)}
+  
+# Summary of changes to schedule  
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> group_by(change_hrs) |> summarise(n = n())} # count of surveys by the absolute change in the survey_start (time)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (index_b4_start == "Yes") } # Flag any surveys where index1 occurs before survey_start (this shouldn't happen but checking just in case)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (end_minus_sunset > ui_end_adj) } # Flag any surveys where survey_end is after end of legal fishing hours (any surveys listed here should be due to a tiny amount of rounding error and barely larger than ui_end_adj )
   
 # Final schedule
   final_schedule |> print(n=10)

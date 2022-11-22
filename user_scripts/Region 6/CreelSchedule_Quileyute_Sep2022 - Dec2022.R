@@ -93,7 +93,7 @@
     ui_start_manual<-c("") # Specify manual start time (format "HH:MM:SS", e.g., 6 AM = "06:00:00")
     ui_end_manual<-  c("") # Specify manual end time (format "HH:MM:SS")  
 # Estimated total non-river time for a given survey date (e.g., daily drive time (hours) to/from duty station to sampling location (i.e., time per shift not spent on the water sampling) 
-    ui_drive_time<-0.75
+    ui_drive_time<-0.75 
     
 # Potential shift lengths (i.e., total work day length in hours)
     potential_shift_length<-c(8, 10) # Generally 8 or 10 to accommodate 5-8s or 4-10s weekly work schedules
@@ -110,7 +110,7 @@
 # Shifts & Shift Length
   ui_shifts_total<-1   # Total number of potential shifts per day
   ui_shifts_smpl<-1    # Number of shifts to sample within a day
-  ui_shift_length<-10  # shift length (i.e., length of entire work day including drive time to and from river from office/home)   
+  ui_shift_length<-10  # shift length (in hours; i.e., length of entire work day including drive time to and from river from office/home)   
 
 # Run source code
   seed.number<-123
@@ -187,14 +187,17 @@
 # Preview schedule
   date_times_preview |> print(n=100)
   
-# Decide if you want to modify the "survey_start" under specific conditions
+# Decide if you want to modify the "survey_start" of shift 1 and specific the latest possible survey_start (time)
   ui_modify_ss<-c("Yes")          # Enter "Yes" if you want to update "survey_start" (which will also effect "survey_end")
-  ui_modify_ss_shifts<-c(1)       # Enter the "shift" number where the "survey_start" can be modified
   ui_modify_ss_latest<-c("10:00:00") # Enter the latest "survey_start" time (if "index_time_1" isn't earliest)
   
 # If desired, updated "survey_start" times 
   if(ui_modify_ss == "Yes"){source(paste0(wd_source_files, "/09b_modify_survey_starts.R"))}else{final_schedule<-date_times_preview} 
-  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> print(n = Inf)}
+  
+# Summary of changes to schedule  
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> group_by(change_hrs) |> summarise(n = n())} # count of surveys by the absolute change in the survey_start (time)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (index_b4_start == "Yes") } # Flag any surveys where index1 occurs before survey_start (this shouldn't happen but checking just in case)
+  if(ui_modify_ss == "Yes"){updates_to_shift1_survey_starts |> filter (end_minus_sunset > ui_end_adj) } # Flag any surveys where survey_end is after end of legal fishing hours (any surveys listed here should be due to a tiny amount of rounding error and barely larger than ui_end_adj )
   
 # Final schedule
   final_schedule |> print(n=10)  
