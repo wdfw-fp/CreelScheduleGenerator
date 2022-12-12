@@ -38,8 +38,9 @@
 # Specify groups of days within a week that should be considered a "weekend" (where angler effort is anticipated to be highest and similar)  
   ui_daytype_weekends <-c("Friday", "Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
 
-# If needed, specify days of the week and/or individual dates when the (entire) fishery will be closed (NOTE: do NOT enter any dates where only portions of the fishery will closed.  Here adjustments will need to be made to data collection protocol)
-  ui_closed_weekdays <-c("Wednesday") # If applicable, list weekdays that the fishery will be closed; Example: c("Sunday", "Monday")
+# If needed, specify days of the week and/or individual dates when the (entire) fishery will be closed.  If none, delete the contents within the brackets but still run the following three lines of code. 
+  ##  NOTE: do NOT enter any dates where only portions of the fishery will closed.  Here adjustments will need to be made to data collection protocol
+  ui_closed_weekdays <-c("Wednesday") # If applicable, list weekdays that the fishery will be closed; Example: c("Sunday", "Monday").  
   ui_closed_start_end<-c("2022-05-29", "2022-06-30") # If certain weekdays are closed, enter the start and end dates for closures; Example: c("2022-08-07", "2022-08-31")
   ui_closed_dates    <-c("2022-07-14") # If applicable, list individual closure dates; NOTE: these can be in addition to any "ui_closed_weekdays"; Example: c("2022-08-24", "2022-08-31")   
 
