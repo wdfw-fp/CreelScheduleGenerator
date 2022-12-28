@@ -60,7 +60,7 @@
 # Do you want to potentially creel sample dates when the fishery is closed   
   ui_survey_closures<-c("No") # Enter "Yes" or "No"; NOTE: we are generally trying to survey legal fishing; therefore, default should be "No"
     
-# Do you want to remove all from potential creel schedule (if "Yes", creel technician will NOT be schedule to work on the exact date of all holidays)
+# Do you want to remove all state holidays from potential creel schedule (if "Yes", creel technician will NOT be schedule to work on the exact date of all holidays)
   ui_remove_holidays<-c("Yes") # Enter "Yes" or "No"
   
 # Do you want to reduce the number of survey day by the number of holidays within a week?
@@ -118,7 +118,7 @@
   source(paste0(wd_source_files, "/05_select_creel_times.R"))
 
 # Preview output
-  creel_date_times |> print(n=10)
+  creel_date_times |> arrange(date)  |> print(n=10)
   creel_date_times |> count(shift)
  
 #---------------------------------------------------------------------------------------------------------- -  
