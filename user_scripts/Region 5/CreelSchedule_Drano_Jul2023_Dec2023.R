@@ -32,8 +32,8 @@
 # (2) DEFINE AMONG DAY SAMPLING FRAME (i.e., potential dates to be creel sampled)                        ----
 #---------------------------------------------------------------------------------------------------------- -    
 # Specify start and end dates for creel survey schedule (format "yyyy-mm-dd")
-  ui_startDate<-as.Date(c("2022-07-18")) 
-  ui_endDate<-as.Date(c("2022-10-31")) 
+  ui_startDate<-as.Date(c("2023-07-18")) 
+  ui_endDate<-as.Date(c("2023-12-31")) 
     
 # Specify groups of days within a week that should be considered a "weekend" (where angler effort is anticipated to be highest and similar)  
   ui_daytype_weekends <-c("Saturday", "Sunday") # NOTE: Default is "Saturday" and "Sunday" but often "Friday" can be consider weekend day too
@@ -74,7 +74,7 @@
   source(paste0(wd_source_files, "/03_select_creel_dates.R"))
 
 #Preview creel schedule        
-  creel_dates
+  creel_dates |> print(n=Inf)
 
 #---------------------------------------------------------------------------------------------------------------------------- -  
 # (4) DEFINE WITHIN DAY SAMPLING FRAME & EVALUATE SUGGESTED NUMBER OF SHIFTS PER DAY FOR GIVEN SHIFT LENGTHS ----
