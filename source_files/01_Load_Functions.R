@@ -57,7 +57,8 @@ date_df<-function(date_list){
           holidays <- c(holidays, as.character(USLaborDay(y))) 
           holidays <- c(holidays, as.character(USVeteransDay(y))) 
           holidays <- c(holidays, as.character(USThanksgivingDay(y))) 
-          holidays <- c(holidays, as.character(timeDate(as.character(.nth.of.nday(y, 11, 5, 4))))) #Native American Heritage Day
+          holidays <- c(holidays, as.character(USThanksgivingDay(y) + 86400))
+         #holidays <- c(holidays, as.character(timeDate(as.character(.nth.of.nday(y, 11, 5, 4))))) #Native American Heritage Day
           holidays <- c(holidays, as.character(USChristmasDay(y))) 
    } 
    holidays = as.Date(holidays,format="%Y-%m-%d") 
