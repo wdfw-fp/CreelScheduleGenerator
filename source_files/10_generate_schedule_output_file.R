@@ -76,9 +76,16 @@ colnames(schedule_notes)<-c("Field", "Definition")
 
 # Write schedule to output folder
   ifelse(!dir.exists(wd_output_files), {dir.create(wd_output_files); "Output sub-folder created"},"Output sub-folder exists already")
-  write.xlsx(as.data.frame(ui_list_total), paste(wd_output_files, paste("CreelSchedule_", paste(ui_water_bodies, collapse = ","),"_", format(ui_startDate, "%b%Y"), "_thru_", format(ui_endDate, "%b%Y"),".xlsx", collapse="", sep=""), sep="/"), row.names=F, sheetName = "user inputs (ui)")
-  write.xlsx(as.data.frame(final_schedule), paste(wd_output_files, paste("CreelSchedule_", paste(ui_water_bodies, collapse = ","),"_", format(ui_startDate, "%b%Y"), "_thru_", format(ui_endDate, "%b%Y"),".xlsx", collapse="", sep=""), sep="/"), row.names=F, sheetName = "schedule", append = TRUE) 
-  write.xlsx(as.data.frame(schedule_notes), paste(wd_output_files, paste("CreelSchedule_", paste(ui_water_bodies, collapse = ","),"_", format(ui_startDate, "%b%Y"), "_thru_", format(ui_endDate, "%b%Y"),".xlsx", collapse="", sep=""), sep="/"), row.names=F, sheetName = "definitions", append = TRUE) # 
-  write.xlsx(as.data.frame(sub_index_sites |> select(surveyor_num, site_num, site_name)), paste(wd_output_files, paste("CreelSchedule_", paste(ui_water_bodies, collapse = ","),"_", format(ui_startDate, "%b%Y"), "_thru_", format(ui_endDate, "%b%Y"),".xlsx", collapse="", sep=""), sep="/"), row.names=F, sheetName = "index sites by surveyor", append = TRUE) # 
+
+  sheets <- list("ui_list_total" = ui_list_total,
+                 "final_schedule" = final_schedule,
+                 "schedule_notes" = schedule_notes,
+                 "sub_index_sites" = sub_index_sites)
+  
+  sheet_names <- list("user inputs (ui)", "schedule", "definitions", "index sites by surveyor")
+  
+  openxlsx::write.xlsx(x = sheets, 
+                       file = paste0(wd_output_files, "/CreelSchedule_", ui_water_bodies, "_", format(ui_startDate, "%b%Y"), "_thru_", format(ui_endDate, "%b%Y"), ".xlsx"),
+                       sheetName = sheet_names)
   
   print("Creel schedule output file generated")
