@@ -16,7 +16,7 @@
   source(paste0(wd_source_files, "/01_Load_Functions.R"))
   
 # Install/Load packages
-  package_list<-c("here", "tidyverse", "xlsx", "timeDate", "suncalc", "lubridate", "chron") 
+  package_list<-c("here", "tidyverse", "openxlsx", "timeDate", "suncalc", "lubridate", "chron") 
   install_or_load_pack(package_list)  
     
 # Load look-up tables
